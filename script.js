@@ -56,7 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("year").textContent = new Date().getFullYear();
 
   // Contact form demo: prepares an email using the visitor's default mail app.
-  // Replace the email below with your own address before publishing.
   const contactForm = document.getElementById("contactForm");
   contactForm.addEventListener("submit", event => {
     event.preventDefault();
