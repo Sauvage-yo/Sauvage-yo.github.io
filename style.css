@@ -512,3 +512,138 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
   .portrait-frame { height: 335px; }
   .floating-chip { font-size: .47rem; padding: 9px 8px; }
 }
+
+
+/* Subtle mechanical backdrop: cool metal tones match the portfolio's blue/cyan palette. */
+.gear-backdrop { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; color: #7caeff; opacity: .14; }
+.background-gear { position: absolute; width: clamp(210px, 32vw, 460px); height: auto; filter: drop-shadow(0 0 18px rgba(112,168,255,.12)); will-change: transform; }
+.gear-large { top: 12%; right: -9%; color: #7ce6e0; }
+.gear-small { width: clamp(130px, 19vw, 270px); top: 57%; left: -7%; color: #70a8ff; opacity: .72; }
+
+/* Electric edge shimmer around the portrait on hover/focus. */
+.profile-interactive-wrap::before { content: ""; position: absolute; inset: -7px; border-radius: 18px; pointer-events: none; opacity: 0; z-index: 0; background: conic-gradient(from 0deg, transparent 0 14%, #7ce6e0 18%, #70a8ff 23%, transparent 29% 52%, #b49aff 57%, #7ce6e0 63%, transparent 69% 100%); filter: blur(2px); transition: opacity .25s ease; }
+.profile-interactive-wrap:hover::before, .profile-interactive-wrap:focus-within::before { opacity: .95; animation: electric-spin 2.8s linear infinite; }
+.profile-interactive-wrap .portrait-frame { position: relative; }
+.profile-interactive-wrap .portrait-frame::after { content: ""; position: absolute; inset: -2px; border-radius: inherit; border: 1px solid rgba(124,230,224,.35); box-shadow: 0 0 0 1px rgba(112,168,255,.16), 0 0 24px rgba(124,230,224,.08); pointer-events: none; transition: box-shadow .25s ease; }
+.profile-interactive-wrap:hover .portrait-frame::after, .profile-interactive-wrap:focus-within .portrait-frame::after { box-shadow: 0 0 12px rgba(124,230,224,.55), 0 0 30px rgba(112,168,255,.3), inset 0 0 16px rgba(124,230,224,.12); }
+@keyframes electric-spin { to { transform: rotate(360deg); } }
+
+/* Interest cards glow on hover and expand on click/tap. */
+.interest-grid { position: relative; }
+.interest-card { cursor: pointer; transform-origin: center; transition: transform .28s cubic-bezier(.2,.8,.2,1), border-color .25s ease, box-shadow .25s ease, filter .25s ease; }
+.interest-card::after { content: ""; position: absolute; inset: 0; z-index: 3; border-radius: inherit; pointer-events: none; border: 1px solid transparent; transition: border-color .25s ease, box-shadow .25s ease; }
+.interest-card:hover, .interest-card:focus-visible { z-index: 4; transform: translateY(-5px) scale(1.025); border-color: rgba(124,230,224,.72); box-shadow: 0 0 0 1px rgba(124,230,224,.13), 0 0 24px rgba(124,230,224,.17), 0 15px 35px rgba(0,0,0,.25); }
+.interest-card:hover::after, .interest-card:focus-visible::after { border-color: rgba(124,230,224,.5); box-shadow: inset 0 0 18px rgba(124,230,224,.08); }
+.interest-card.is-expanded { z-index: 8; transform: scale(1.09); border-color: rgba(124,230,224,.95); box-shadow: 0 0 0 2px rgba(124,230,224,.2), 0 0 38px rgba(124,230,224,.3), 0 24px 55px rgba(0,0,0,.5); }
+.interest-card.is-expanded::after { border-color: rgba(124,230,224,.8); box-shadow: inset 0 0 24px rgba(124,230,224,.12); }
+.interest-card.is-expanded .interest-background-video { transform: scale(1.12); }
+.interest-background-video { transition: transform .45s ease; }
+.interest-card[aria-pressed="true"] .interest-index::after { content: " · SELECTED"; color: #a9f5ef; font-size: .58rem; letter-spacing: .1em; }
+@media (max-width: 720px) { .gear-backdrop { opacity: .09; } .gear-large { right: -25%; top: 17%; } .gear-small { left: -20%; } .interest-card.is-expanded { transform: scale(1.025); } }
+@media (prefers-reduced-motion: reduce) { .background-gear, .interest-background-video { transition: none !important; } .profile-interactive-wrap:hover::before, .profile-interactive-wrap:focus-within::before { animation: none; } }
+
+
+/* Refined profile highlight: a clean, steady glow around the portrait and details. */
+.profile-interactive-wrap::before {
+  inset: -3px;
+  border-radius: 16px;
+  background: none;
+  border: 1px solid rgba(124, 230, 224, .0);
+  filter: none;
+  box-shadow: none;
+  animation: none;
+  transition: border-color .25s ease, box-shadow .25s ease, opacity .25s ease;
+}
+.profile-interactive-wrap:hover::before,
+.profile-interactive-wrap:focus-within::before {
+  opacity: 1;
+  border-color: rgba(124, 230, 224, .58);
+  box-shadow: 0 0 0 1px rgba(112,168,255,.16), 0 0 20px rgba(124,230,224,.14);
+  animation: none;
+}
+.profile-interactive-wrap .portrait-frame::after {
+  inset: 0;
+  border: 1px solid rgba(124,230,224,.22);
+  box-shadow: none;
+}
+.profile-interactive-wrap:hover .portrait-frame::after,
+.profile-interactive-wrap:focus-within .portrait-frame::after {
+  border-color: rgba(124,230,224,.68);
+  box-shadow: inset 0 0 18px rgba(124,230,224,.07), 0 0 18px rgba(124,230,224,.12);
+}
+.profile-interactive-wrap:hover .profile-details-button,
+.profile-interactive-wrap:focus-within .profile-details-button,
+.profile-interactive-wrap.panel-open .profile-details-button {
+  border-color: rgba(124,230,224,.68);
+  box-shadow: 0 0 16px rgba(124,230,224,.10);
+}
+
+/* Clicked interest cards enlarge clearly while keeping the grid usable. */
+.interest-card.is-expanded {
+  transform: scale(1.13);
+  box-shadow: 0 0 0 2px rgba(124,230,224,.22), 0 0 32px rgba(124,230,224,.22), 0 24px 55px rgba(0,0,0,.5);
+}
+@media (max-width: 720px) {
+  .interest-card.is-expanded { transform: scale(1.045); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .profile-interactive-wrap::before { transition: none; }
+}
+
+
+/* Clean edge glow for profile and its details control */
+.profile-interactive-wrap { border-radius: 22px; transition: filter .25s ease; }
+.profile-interactive-wrap::before {
+  content: ""; position: absolute; inset: -2px; border-radius: 22px;
+  border: 1px solid transparent; pointer-events: none; opacity: 0;
+  box-shadow: 0 0 0 1px rgba(124,230,224,.55), 0 0 18px rgba(124,230,224,.22), 0 0 38px rgba(112,168,255,.12);
+  transition: opacity .25s ease;
+}
+.profile-interactive-wrap:hover::before,
+.profile-interactive-wrap:focus-within::before { opacity: 1; }
+.profile-interactive-wrap:hover .portrait-frame,
+.profile-interactive-wrap:focus-within .portrait-frame {
+  border-color: rgba(124,230,224,.7);
+  box-shadow: 0 28px 90px rgba(0,0,0,.42), 0 0 20px rgba(124,230,224,.18), 0 0 42px rgba(112,168,255,.12);
+  transition: border-color .25s ease, box-shadow .25s ease;
+}
+.profile-details-button:hover,
+.profile-details-button:focus-visible {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 1px rgba(124,230,224,.18), 0 0 16px rgba(124,230,224,.22), 0 0 30px rgba(112,168,255,.12);
+}
+
+/* Interest cards: subtle hover, 2x expansion on click */
+.interest-grid { position: relative; }
+.interest-card {
+  cursor: pointer; transform-origin: center center;
+  transition: transform .3s cubic-bezier(.2,.75,.25,1), border-color .25s ease, box-shadow .25s ease;
+  will-change: transform;
+}
+.interest-card:hover,
+.interest-card:focus-visible {
+  transform: translateY(-4px) scale(1.035);
+  border-color: rgba(124,230,224,.7);
+  box-shadow: 0 0 0 1px rgba(124,230,224,.18), 0 0 22px rgba(124,230,224,.16), inset 0 0 20px rgba(124,230,224,.025);
+}
+.interest-card.is-expanded {
+  position: relative; z-index: 10;
+  transform: scale(1.5);
+  border-color: rgba(124,230,224,.95);
+  box-shadow: 0 0 0 1px rgba(124,230,224,.3), 0 0 32px rgba(124,230,224,.28), 0 24px 55px rgba(0,0,0,.55);
+}
+.interest-card.is-expanded:hover { transform: scale(1.5); }
+.interest-card:focus-visible { outline: 2px solid var(--cyan); outline-offset: 4px; }
+@media (max-width: 760px) {
+  .interest-card.is-expanded { transform: scale(1.12); }
+  .interest-card.is-expanded:hover { transform: scale(1.12); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .profile-interactive-wrap::before, .interest-card { transition: none; }
+}
+
+
+/* Full project cards act as links; inner arrow links remain independently usable. */
+.project-card-clickable { cursor: pointer; }
+.project-card-clickable:focus-visible { outline: 2px solid var(--cyan); outline-offset: 5px; border-radius: 12px; }
+.project-card-clickable:hover { filter: brightness(1.035); }

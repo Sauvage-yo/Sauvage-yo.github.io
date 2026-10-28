@@ -55,6 +55,32 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   document.getElementById("year").textContent = new Date().getFullYear();
 
+  // Background gears respond smoothly to scroll direction and distance.
+  const gears = [...document.querySelectorAll(".background-gear")];
+  let lastScrollY = window.scrollY;
+  let gearScroll = 0;
+  let gearFrame = false;
+  window.addEventListener("scroll", () => {
+    const currentY = window.scrollY;
+    const delta = currentY - lastScrollY;
+    lastScrollY = currentY;
+    gearScroll += delta * 0.42;
+    if (!gearFrame) {
+      gearFrame = true;
+      window.requestAnimationFrame(() => {
+        gears.forEach((gear, index) => {
+          const direction = index === 0 ? 1 : -1;
+          const rotation = gearScroll * direction * (index === 0 ? 0.72 : 1.08);
+          const drift = Math.min(36, Math.max(-36, currentY * (index === 0 ? 0.025 : -0.018)));
+          gear.style.transform = `translate3d(0, ${drift}px, 0) rotate(${rotation}deg)`;
+        });
+        gearFrame = false;
+      });
+    }
+  }, { passive: true });
+
+
+
   // Contact form demo: prepares an email using the visitor's default mail app.
   const contactForm = document.getElementById("contactForm");
   contactForm.addEventListener("submit", event => {
@@ -213,3 +239,72 @@ if (profileDetailsButton) {
     profileWrap.classList.toggle("panel-open", !isOpen);
   });
 }
+
+
+// Interest cards: hover previews the glow; click toggles a 1.5x zoom.
+document.querySelectorAll(".interest-card").forEach((card) => {
+  card.setAttribute("tabindex", "0");
+  card.setAttribute("role", "button");
+  card.setAttribute("aria-pressed", "false");
+
+  const toggleCard = () => {
+    const expand = !card.classList.contains("is-expanded");
+    document.querySelectorAll(".interest-card.is-expanded").forEach((other) => {
+      other.classList.remove("is-expanded");
+      other.setAttribute("aria-pressed", "false");
+    });
+    if (expand) {
+      card.classList.add("is-expanded");
+      card.setAttribute("aria-pressed", "true");
+    }
+  };
+
+  card.addEventListener("click", (event) => {
+    if (event.target.closest("a, button")) return;
+    toggleCard();
+  });
+  card.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      toggleCard();
+    } else if (event.key === "Escape") {
+      card.classList.remove("is-expanded");
+      card.setAttribute("aria-pressed", "false");
+    }
+  });
+});
+document.addEventListener("click", (event) => {
+  if (!event.target.closest(".interest-card")) {
+    document.querySelectorAll(".interest-card.is-expanded").forEach((card) => {
+      card.classList.remove("is-expanded");
+      card.setAttribute("aria-pressed", "false");
+    });
+  }
+});
+
+
+// Make the two requested project cards clickable across the full card surface.
+const projectDestinations = {
+  "Students Management System": "https://onlinegdb.com/eez0GTg-IR",
+  "Personal Portfolio": "https://sauvage-yo.github.io/"
+};
+document.querySelectorAll(".project-card").forEach((card) => {
+  const heading = card.querySelector("h3");
+  const destination = projectDestinations[heading?.textContent.trim()];
+  if (!destination) return;
+  card.classList.add("project-card-clickable");
+  card.setAttribute("tabindex", "0");
+  card.setAttribute("role", "link");
+  card.setAttribute("aria-label", `Open ${heading.textContent.trim()}`);
+  card.addEventListener("click", (event) => {
+    if (event.target.closest("a, button")) return;
+    window.open(destination, "_blank", "noopener,noreferrer");
+  });
+  card.addEventListener("keydown", (event) => {
+    if (event.target !== card) return;
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      window.open(destination, "_blank", "noopener,noreferrer");
+    }
+  });
+});
