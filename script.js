@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const body = encodeURIComponent(
       `Name: ${formData.get("name")}\nEmail: ${formData.get("email")}\n\n${formData.get("message")}`
     );
-    document.getElementById("formNote").textContent = "Opening your email app with a prepared message. Add your real email address in script.js before publishing.";
+    document.getElementById("formNote").textContent = "Opening your email app with a prepared message.";
     window.location.href = `mailto:${recipient}?subject=${subject}&body=${body}`;
   });
 
